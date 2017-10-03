@@ -1,6 +1,6 @@
 # Somatic Variant Calling Pipeline
 
-![version](https://img.shields.io/badge/Version-0.0.1-yellow.svg?style=flat-square)
+![version](https://img.shields.io/badge/Version-0.0.1-red.svg?style=flat-square)
 
 This pipeline is based on GATK best practices for somatic variant calling Tumor matched Normal NGS dataset.
 
@@ -17,25 +17,19 @@ This pipeline is based on GATK best practices for somatic variant calling Tumor 
 |![Picard](https://img.shields.io/badge/Picard-2.1x-brightgreen.svg?style=flat-square)|![COSMIC](https://img.shields.io/badge/Cosmic-82-blue.svg?style=flat-square)|
 |![JAVA](https://img.shields.io/badge/JDK-8.x-brightgreen.svg?style=flat-square)|![dbSNP](https://img.shields.io/badge/dbSNP-138-blue.svg?style=flat-square)|
 
-### Software
+## TODO
 
-![GATK](https://img.shields.io/badge/GATK-v--3.x-brightgreen.svg?style=flat-square)
-
-![QUEUE](https://img.shields.io/badge/QUEUE-v--3.x-brightgreen.svg?style=flat-square)
-
-![Picard](https://img.shields.io/badge/Picard-2.1x-brightgreen.svg?style=flat-square)
-
-![JAVA](https://img.shields.io/badge/JDK-v--8.x-brightgreen.svg?style=flat-square)
-
-### Databases/References
-
-![Genome](https://img.shields.io/badge/Genome-GRCh37-blue.svg?style=flat-square)
-
-![Hapmap](https://img.shields.io/badge/Hapmap-v--3.3-blue.svg?style=flat-square)
-
-![COSMIC](https://img.shields.io/badge/Cosmic-v--82-blue.svg?style=flat-square)
-
-![dbSNP](https://img.shields.io/badge/dbSNP-v--138-blue.svg?style=flat-square)
+- [ ] Bash version
+	- [x] Make it works
+	- [ ] Make workflow
+	- [ ] Defined options
+	- [ ] Make usage/Help
+	- [ ] Expand from fastq
+- [ ] Documentation
+	- [x] List dependencies
+	- [ ] How to install dependencies
+	- [ ] PDF
+- [ ] SnakeMake
 
 ## Ressources
 
