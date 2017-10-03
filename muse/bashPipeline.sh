@@ -4,7 +4,7 @@
 # [Charles VAN GOETHEM] SomaticCaller
 #          Pipeline base on GATK best practices
 # ------------------------------------------------------------------
-VERSION=0.1.0
+VERSION=0.0.1
 USAGE="Usage:	bashPipeline.sh [-h] -f <filename.fastq.gzip> -r <directory>"
 PWD_PROJECT=$(pwd)
 
@@ -84,39 +84,39 @@ MAX_RAM=84
 
 
 
-#while read p; do
-#	CURRENT_SAMPLE_BASEDIR_NAME=$(basename "${p}")
-#	CURRENT_SAMPLE_NAME=${CURRENT_SAMPLE_BASEDIR_NAME%.bam}
-#	printf "\n\n\nBASENAME CURRENT SAMPLE : ${CURRENT_SAMPLE_NAME}\n\n\n"
-#	$JAVA -jar -Djava.io.tmpdir=out/tmp_PoN/${CURRENT_SAMPLE_NAME} -Xmx${MAX_RAM}g $QUEUE -l WARN \
-#	    -S queueScripts/muTect2_PoN.scala \
-#	    -tumor $p \
-#	    -dbsnp $DBSNP \
-#	    -o $CURRENT_SAMPLE_NAME.1_normal.vcf.gz \
-#	    -R $REF \
-#	    ${QUEUE_RUNNER} \
-#	    -jobSGDir out/ \
-#	    -run 
-#	echo "$CURRENT_SAMPLE_NAME.1_normal.vcf.gz" >> PoN.list
-#done < $panel
-#
-#srun --job-name=splitVCF -N1 -n1 -c24 --partition=defq --account=IURC $JAVA -jar -Xmx${MAX_RAM}g $GATK \
-#	-T CombineVariants \
-#	-nt ${NB_THREAD} \
-#	--arg_file PoN.list \
-#	-minN 2 \
-#	--setKey "null" \
-#	--filteredAreUncalled \
-#	--filteredrecordsmergetype KEEP_IF_ANY_UNFILTERED \
-#	-o 2_pon_combinevariants.vcf.gz \
-#	-R $REF \
-#	--genotypemergeoption UNIQUIFY
+while read p; do
+	CURRENT_SAMPLE_BASEDIR_NAME=$(basename "${p}")
+	CURRENT_SAMPLE_NAME=${CURRENT_SAMPLE_BASEDIR_NAME%.bam}
+	printf "\n\n\nBASENAME CURRENT SAMPLE : ${CURRENT_SAMPLE_NAME}\n\n\n"
+	$JAVA -jar -Djava.io.tmpdir=out/tmp_PoN/${CURRENT_SAMPLE_NAME} -Xmx${MAX_RAM}g $QUEUE -l WARN \
+	    -S queueScripts/muTect2_PoN.scala \
+	    -tumor $p \
+	    -dbsnp $DBSNP \
+	    -o $CURRENT_SAMPLE_NAME.1_normal.vcf.gz \
+	    -R $REF \
+	    ${QUEUE_RUNNER} \
+	    -jobSGDir out/ \
+	    -run
+	echo "$CURRENT_SAMPLE_NAME.1_normal.vcf.gz" >> PoN.list
+done < $panel
 
-# rm PoN.list
+srun --job-name=splitVCF -N1 -n1 -c24 --partition=defq --account=IURC $JAVA -jar -Xmx${MAX_RAM}g $GATK \
+	-T CombineVariants \
+	-nt ${NB_THREAD} \
+	--arg_file PoN.list \
+	-minN 2 \
+	--setKey "null" \
+	--filteredAreUncalled \
+	--filteredrecordsmergetype KEEP_IF_ANY_UNFILTERED \
+	-o 2_pon_combinevariants.vcf.gz \
+	-R $REF \
+	--genotypemergeoption UNIQUIFY
 
-#srun --job-name=splitVCF -N1 -n1 -c24 --partition=defq --account=IURC $JAVA -jar $PICARD MakeSitesOnlyVcf \
-#	I=2_pon_combinevariants.vcf.gz \
-#	O=3_pon_siteonly.vcf.gz
+rm PoN.list
+
+srun --job-name=splitVCF -N1 -n1 -c24 --partition=defq --account=IURC $JAVA -jar $PICARD MakeSitesOnlyVcf \
+	I=2_pon_combinevariants.vcf.gz \
+	O=3_pon_siteonly.vcf.gz
 
 $JAVA -jar -Djava.io.tmpdir=out/tmp_contEst -Xmx${MAX_RAM}g $QUEUE -S queueScripts/contEst.scala \
 	-eval $tumor \
@@ -126,7 +126,7 @@ $JAVA -jar -Djava.io.tmpdir=out/tmp_contEst -Xmx${MAX_RAM}g $QUEUE -S queueScrip
 	-R $REF \
 	${QUEUE_RUNNER} \
 	-jobSGDir out/ \
-	-run 
+	-run
 
 $JAVA -jar -Djava.io.tmpdir=out/tmp_contEst -Xmx${MAX_RAM}g $QUEUE -S queueScripts/contEst.scala \
 	-eval $normal \
@@ -136,7 +136,7 @@ $JAVA -jar -Djava.io.tmpdir=out/tmp_contEst -Xmx${MAX_RAM}g $QUEUE -S queueScrip
 	-R $REF \
 	${QUEUE_RUNNER} \
 	-jobSGDir out/ \
-	-run 
+	-run
 
 srun --job-name=ArtMetricsTumor -N1 -n1 -c24 --partition=defq --account=IURC $JAVA -jar $PICARD CollectSequencingArtifactMetrics \
 	I=$tumor \
@@ -159,4 +159,4 @@ $JAVA -Djava.io.tmpdir=out/tmpp_call/ -Xmx${MAX_RAM}g -jar $QUEUE -S queueScript
 	-R $REF  \
 	${QUEUE_RUNNER} \
 	-jobSGDir out/ \
-	-run 
+	-run
