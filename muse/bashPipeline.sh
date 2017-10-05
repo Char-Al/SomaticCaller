@@ -25,7 +25,21 @@ usage ()
 
 
 
-# --- Option processing --------------------------------------------
+# ==============================================================================
+# ==============================================================================
+
+
+function _arg_ctrl () {
+	local opt="${1}"
+	local value="${2}"
+
+	if [[ $value =~ ^- ]] || [[ -z $value ]] || [[ $value == "" ]]
+	then
+		echo "error Option ${opt} requires an argument"
+	fi
+}
+
+
 tumor=""
 normal=""
 panel=""
@@ -34,7 +48,8 @@ vcfNormal=""
 # Parse command line
 while [ "$1" != "" ]; do
 	case $1 in
-		-t | --tumor )			shift
+		-t | --tumor )			_arg_ctrl "-t (--tumor)" $2
+								shift
 								tumor=$1
 								;;
 		-p | --panelOfNormal )	shift
