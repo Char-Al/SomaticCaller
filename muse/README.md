@@ -31,6 +31,7 @@ This pipeline is based on GATK best practices for somatic variant calling Tumor 
 	- [ ] Defined options
 	- [ ] Make usage/Help
 	- [ ] Expand from fastq
+	- [ ] Add cpt for warning, error...
 - [ ] Documentation
 	- [x] List dependencies
 	- [ ] How to install dependencies
